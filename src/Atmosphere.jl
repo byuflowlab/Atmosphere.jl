@@ -1,4 +1,4 @@
-"StandardAtmosphere: Used to calculate values for air density, dynamic viscosity, and speed of sound according to the NASA 1976 Standard Atmosphere.
+"Atmosphere: Used to calculate values for air density, dynamic viscosity, and speed of sound according to the NASA 1976 Standard Atmosphere.
 
 Constains the Functions:\\
 -atmosphere (main)\\
