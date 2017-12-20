@@ -10,7 +10,7 @@ using Base.Test
 	T = zeros(length(h))
 	P = zeros(length(h))
 	for i=1:length(h)
-		T[i],P[i] = StandardAtmosphere.temp_presdrela(h[i])
+		T[i],P[i] = Atmosphere.temp_presdrela(h[i])
 	end #for length h
 
 	#---Check Outputs
@@ -31,7 +31,7 @@ end #Temp and Pres: Drela
 	T = zeros(length(h))
 	P = zeros(length(h))
 	for i=1:length(h)
-		T[i],P[i] = StandardAtmosphere.temp_presnasa(h[i])
+		T[i],P[i] = Atmosphere.temp_presnasa(h[i])
 	end #for length h
 
 	#---Check Outputs
@@ -55,7 +55,7 @@ end #Temp and Pres: NASA
 	#---Initialize and Run Function
 	rho = zeros(length(P))
 	for i=1:length(P)
-		rho[i] = StandardAtmosphere.density(T[i],P[i])
+		rho[i] = Atmosphere.density(T[i],P[i])
 	end #for length P
 
 	#---Check Outputs
@@ -75,7 +75,7 @@ end #Ideal Gas Density
 	#---Initialize and Run Function
 	sos = zeros(length(T))
 	for i=1:length(T)
-		sos[i] = StandardAtmosphere.speedofsound(T[i])
+		sos[i] = Atmosphere.speedofsound(T[i])
 	end #for length T
 
 	#---Check Outputs
@@ -94,7 +94,7 @@ end #Ideal Gas: SoS
 	#---Initialize and Run Function
 	mu = zeros(length(T))
 	for i=1:length(T)
-		mu[i] = StandardAtmosphere.viscosity(T[i])
+		mu[i] = Atmosphere.viscosity(T[i])
 	end
 
 	#---Check Outputs
