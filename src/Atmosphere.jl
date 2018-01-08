@@ -14,11 +14,11 @@ export atmosphere
 
 #Define Constants
 const Tsl = 288.15  #sea level temperature (K)
-const Psl = 101325 #sea level pressure (Pa)
+const Psl = 101325.0 #sea level pressure (Pa)
 const musl = 0.0000181206  #sea level viscosity (N-s/m^2)
-const Sc = 110.4  #constant in Sutherlands formula
+const Sc = 110.0  #constant in Sutherlands formula (K)
 const gamma = 1.4  #ratio of specific heats (air)
-const R_M = 287.0520809957016 #Molar Gas Constant/Mean Molar Mass of dry air 287.058
+const R_M = 287.0520809957016 #Molar Gas Constant/Mean Molar Mass of dry air
 
 """
     atmospherefit(altitude::Float64)
@@ -61,22 +61,26 @@ end #temp_presdrela()
 
 #TODO check actual std atm source and update this function accordingly, also create an atmospherestd() function analogous to atmospherefit() above
 # """
-     # temp_presnasa(altitude::Float64)
+#      temp_presnasa(altitude::Float64)
 #
 # Standard Atmosphere model fits for Temperature and Pressure, obtained from the NASA website.
 #
 # """
 # function temp_presnasa(altitude::Float64)
 #     #Tempurature and Pressure Fits
-#     if altitude <= 11000
+#     if altitude < -1000.0
+#         warn("Atmosphere model invalid for altitudes below -1,000 meters.")
+#     elseif (altitude >= -1000.0) && (altitude <= 11000.0)
 #         T = 15.04 - .00649*altitude + 273.1 #units: K
 #         P = 1000*(101.29*(T/288.08)^5.256) #units: Pa
 #     elseif (altitude > 11000) && (altitude <= 25000)
 #         T = -56.46 + 273.1 #units: K
 #         P = 1000*(22.65*exp(1.73 - 0.000157*altitude)) #units: Pa
-#     else #altitude > 25000
+#     elseif (altitude > 25000) && (altitude <= 85000)
 #         T = -131.21 + 0.00299*altitude + 273.1 #units: K
 #         P = 1000*(2.488/((T/216.6)^11.388)) #units: Pa
+#     else
+#         warn("Atmosphere model invalid for altitudes above 85,000 meters.")
 #     end
 #
 #     return T, P
