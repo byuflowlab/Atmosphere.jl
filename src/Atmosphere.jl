@@ -100,7 +100,7 @@ Input: Temperature in Kelvin, Pressure in Pascals
 Output: Density in kilogram per meter cubed"
 function density(Temperature::Float64,Pressure::Float64)
     #Ideal Gas Law
-    rho = Pressure/(287.0520809957016*(Temperature)) #units: kg/m^3
+    rho = Pressure/(287.0520809957016*Temperature) #units: kg/m^3
     return rho
 end #density()
 
