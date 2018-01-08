@@ -56,7 +56,7 @@ function temp_presdrela(altitude::Float64)
 
     #Temperature and Pressure Fits
     T = Tsl - 71.5 + 2*log(1+exp(35.75-3.25*(altkm))+exp(-3.0+0.0003*(altkm)^3))
-    P = Psl*exp(-0.118*(altkm)-(0.0015*(altkm)^2)/(1-0.018*(altkm)+0.0011*(altitude/1000)^2))
+    P = Psl*exp(-0.118*(altkm)-(0.0015*(altkm)^2)/(1-0.018*(altkm)+0.0011*(altkm)^2))
 
     return T,P
 end #temp_presdrela()
