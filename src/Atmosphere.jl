@@ -20,29 +20,24 @@ const R_M = 287.0520809957016 #Molar Gas Constant/Mean Molar Mass of dry air 287
 
 "
 ```julia
-atmosphere(altitude::Float64 [, style::String])
+atmosphere(altitude::Float64)
 ```
 
 Calls fits, density, viscosity, and speed of sound functions.
 
-Input: altitude in meters, style (optional) - \"drelafit\" -> temperature and pressure fits by Dr. Mark Drela (default), \"nasa\" (or anything else) -> temperature and pressure fits by NASA.
+Input: altitude in meters.
 
 Output: air density (kg/m^3), air dynmaic viscosity (Ns/m), speed of sound (m/s)"
-function atmosphere(altitude::Float64, style::String="drelafit")
+function atmospherefit(altitude::Float64)
 
-    if style == "drelafit"
-        T, P = temp_presdrela(altitude)
-    else
-        T, P = temp_presnasa(altitude)
-    end #if style
-
+    T, P = temp_presdrela(altitude)
     rho = density(T, P)
     mu = viscosity(T)
     a = speedofsound(T)
 
     return rho, mu, a
 
-end #atmosphere
+end #atmospherefit
 
 
 "
@@ -66,33 +61,33 @@ function temp_presdrela(altitude::Float64)
     return T, P
 end #temp_presdrela()
 
-
-"
-```julia
-temp_presnasa(altitude::Float64)
-```
-
-Standard Atmosphere model fits for Temperature and Pressure, obtained from the NASA website.
-
-Input: altitude in meters
-
-Output: Temperature in Kelvin, Pressure in Pascals"
-function temp_presnasa(altitude::Float64)
-    #Tempurature and Pressure Fits
-    if altitude <= 11000
-        T = 15.04 - .00649*altitude + 273.1 #units: K
-        P = 1000*(101.29*(T/288.08)^5.256) #units: Pa
-    elseif (altitude > 11000) && (altitude <= 25000)
-        T = -56.46 + 273.1 #units: K
-        P = 1000*(22.65*exp(1.73 - 0.000157*altitude)) #units: Pa
-    else #altitude > 25000
-        T = -131.21 + 0.00299*altitude + 273.1 #units: K
-        P = 1000*(2.488/((T/216.6)^11.388)) #units: Pa
-    end
-
-    return T, P
-
-end #temp_presnasa()
+#TODO check actual std atm source and update this function accordingly, also create an atmospherestd() function analogous to atmospherefit() above
+# "
+# ```julia
+# temp_presnasa(altitude::Float64)
+# ```
+#
+# Standard Atmosphere model fits for Temperature and Pressure, obtained from the NASA website.
+#
+# Input: altitude in meters
+#
+# Output: Temperature in Kelvin, Pressure in Pascals"
+# function temp_presnasa(altitude::Float64)
+#     #Tempurature and Pressure Fits
+#     if altitude <= 11000
+#         T = 15.04 - .00649*altitude + 273.1 #units: K
+#         P = 1000*(101.29*(T/288.08)^5.256) #units: Pa
+#     elseif (altitude > 11000) && (altitude <= 25000)
+#         T = -56.46 + 273.1 #units: K
+#         P = 1000*(22.65*exp(1.73 - 0.000157*altitude)) #units: Pa
+#     else #altitude > 25000
+#         T = -131.21 + 0.00299*altitude + 273.1 #units: K
+#         P = 1000*(2.488/((T/216.6)^11.388)) #units: Pa
+#     end
+#
+#     return T, P
+#
+# end #temp_presnasa()
 
 
 "
