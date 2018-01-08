@@ -20,7 +20,7 @@ const R_M = 287.0520809957016 #Molar Gas Constant/Mean Molar Mass of dry air 287
 
 "
 ```julia
-atmosphere(altitude::Float64 [,style::String])
+atmosphere(altitude::Float64 [, style::String])
 ```
 
 Calls fits, density, viscosity, and speed of sound functions.
@@ -28,19 +28,19 @@ Calls fits, density, viscosity, and speed of sound functions.
 Input: altitude in meters, style (optional) - \"drelafit\" -> temperature and pressure fits by Dr. Mark Drela (default), \"nasa\" (or anything else) -> temperature and pressure fits by NASA.
 
 Output: air density (kg/m^3), air dynmaic viscosity (Ns/m), speed of sound (m/s)"
-function atmosphere(altitude::Float64,style::String="drelafit")
+function atmosphere(altitude::Float64, style::String="drelafit")
 
     if style == "drelafit"
-        T,P = temp_presdrela(altitude)
+        T, P = temp_presdrela(altitude)
     else
-        T,P = temp_presnasa(altitude)
+        T, P = temp_presnasa(altitude)
     end #if style
 
-    rho = density(T,P)
+    rho = density(T, P)
     mu = viscosity(T)
     a = speedofsound(T)
 
-    return rho,mu,a
+    return rho, mu, a
 
 end #atmosphere
 
@@ -63,7 +63,7 @@ function temp_presdrela(altitude::Float64)
     T = Tsl - 71.5 + 2*log(1+exp(35.75-3.25*(altkm))+exp(-3.0+0.0003*(altkm)^3))
     P = Psl*exp(-0.118*(altkm)-(0.0015*(altkm)^2)/(1-0.018*(altkm)+0.0011*(altkm)^2))
 
-    return T,P
+    return T, P
 end #temp_presdrela()
 
 
@@ -90,14 +90,14 @@ function temp_presnasa(altitude::Float64)
         P = 1000*(2.488/((T/216.6)^11.388)) #units: Pa
     end
 
-    return T,P
+    return T, P
 
 end #temp_presnasa()
 
 
 "
 ```julia
-density(Temperature::Float64,Pressure::Float64)
+density(Temperature::Float64, Pressure::Float64)
 ```
 
 Ideal Gas Law solving for density.
@@ -105,7 +105,7 @@ Ideal Gas Law solving for density.
 Input: Temperature in Kelvin, Pressure in Pascals
 
 Output: Density in kilogram per meter cubed"
-function density(Temperature::Float64,Pressure::Float64)
+function density(Temperature::Float64, Pressure::Float64)
     #Ideal Gas Law
     rho = Pressure/(R_M*Temperature) #units: kg/m^3
     return rho
