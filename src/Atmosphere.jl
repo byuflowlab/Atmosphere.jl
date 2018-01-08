@@ -1,4 +1,4 @@
-"Atmosphere: Used to calculate values for air density, dynamic viscosity, and speed of sound according to the NASA 1976 Standard Atmosphere.
+"Atmosphere: Calculate values for air density, dynamic viscosity, and speed of sound.
 
 Constains the Functions:\\
 -atmosphere (main)\\
@@ -19,13 +19,12 @@ const gamma = 1.4  #ratio of specific heats (air)
 const R_M = 287.0520809957016 #Molar Gas Constant/Mean Molar Mass of dry air 287.058
 
 """
-    atmosphere(altitude::Float64)
+    atmospherefit(altitude::Float64)
 
-Calls fits, density, viscosity, and speed of sound functions.
+Call Standard Atmosphere fit, density, viscosity, and speed of sound functions.
 
-Input: altitude in meters.
+Input altitude must be in meters.
 
-Output: air density (kg/m^3), air dynmaic viscosity (Ns/m), speed of sound (m/s)
 """
 function atmospherefit(altitude::Float64)
 
@@ -42,11 +41,10 @@ end #atmospherefit
 """
     temp_presdrela(altitude::Float64)
 
-Standard Atmosphere model fits for Temperature and Pressure, modified slightly from Flight Vehicle Aerodynamics by Mark Drela.
+Return Temperature and Pressure values based on fit to Standard Atmosphere Model.
 
-Input: altitude in meters
+The fit is a slightly modified version of that found in Flight Vehicle Aerodynamics by Mark Drela.
 
-Output: Temperature in Kelvin, Pressure in Pascals
 """
 function temp_presdrela(altitude::Float64)
     #Convert Altitude to km
@@ -65,9 +63,6 @@ end #temp_presdrela()
 #
 # Standard Atmosphere model fits for Temperature and Pressure, obtained from the NASA website.
 #
-# Input: altitude in meters
-#
-# Output: Temperature in Kelvin, Pressure in Pascals
 # """
 # function temp_presnasa(altitude::Float64)
 #     #Tempurature and Pressure Fits
@@ -90,11 +85,8 @@ end #temp_presdrela()
 """
     density(Temperature::Float64, Pressure::Float64)
 
-Ideal Gas Law solving for density.
+Return air density from Ideal Gas Law.
 
-Input: Temperature in Kelvin, Pressure in Pascals
-
-Output: Density in kilogram per meter cubed
 """
 function density(Temperature::Float64, Pressure::Float64)
     #Ideal Gas Law
@@ -106,11 +98,8 @@ end #density()
 """
     speedofsound(Temperature::Float64)
 
-Ideal Gas Law solving for speed of sound.
+Return Speed of Sound from Ideal Gas Law.
 
-Input: Temperature in Kelvin
-
-Output: Speed of Sound in meters per second
 """
 function speedofsound(Temperature::Float64)
     #speed of sound (ideal gas law)
@@ -122,11 +111,8 @@ end #speedofsound()
 """
     viscosity(Temperature::Float64)
 
-Sutherlands Equation for Dynamic Viscosity
+Return Dynamic Viscosity from Sutherlands Equation.
 
-Input: Temperature in Kelvin
-
-Output: Dynamic Viscosity in Pascal seconds (Newton seconds per meter squared)
 """
 function viscosity(Temperature::Float64)
     mu = musl*(Temperature/Tsl)^(3.0/2)*(Tsl+Sc)/(Temperature+Sc) #Pa-s
