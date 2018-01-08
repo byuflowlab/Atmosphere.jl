@@ -119,7 +119,7 @@ function speedofsound(Temperature::Float64)
     gamma = 1.4  #ratio of specific heats (air)
     R_M = 287.0520809957016 #Molar Gas Constant/Mean Molar Mass of dry air 287.058
     #speed of sound (ideal gas law)
-    a = sqrt.(gamma*R_M*Temperature)
+    a = sqrt(gamma*R_M*Temperature)
     return a
 end #speedofsound()
 
