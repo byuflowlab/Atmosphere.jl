@@ -26,7 +26,6 @@ const R_M = 287.0520809957016 #Molar Gas Constant/Mean Molar Mass of dry air
 Return density (kg/m^3), viscosity (Pa-s), and speed of sound (m/s) functions.
 
 Employ fits to Standard Atmosphere model. Input altitude must be in meters.
-
 """
 function atmospherefit(altitude::Float64)
 
@@ -45,8 +44,7 @@ end #atmospherefit
 
 Return Temperature (K) and Pressure (Pa) values based on fit to Standard Atmosphere Model.
 
-The fit is a slightly modified version of that found in Flight Vehicle Aerodynamics by Mark Drela.
-
+The fit is a slightly modified version of that found in Flight Vehicle Aerodynamics by Mark Drela. Input altitude must be in meters.
 """
 function temp_presdrela(altitude::Float64)
     #Convert Altitude to km
@@ -93,6 +91,7 @@ end #temp_presdrela()
 
 Return Air Density (kg/m^3) from Ideal Gas Law.
 
+Input Temperature must be in Kelvin, and Input Pressure must be in Pascals.
 """
 function density(Temperature::Float64, Pressure::Float64)
     #Ideal Gas Law
@@ -106,6 +105,7 @@ end #density()
 
 Return Speed of Sound (m/s) from Ideal Gas Law.
 
+Input Temperature must be in Kelvin.
 """
 function speedofsound(Temperature::Float64)
     #speed of sound (ideal gas law)
@@ -119,6 +119,7 @@ end #speedofsound()
 
 Return Dynamic Viscosity (Pa-s) from Sutherlands Equation.
 
+Input Temperature must be in Kelvin.
 """
 function viscosity(Temperature::Float64)
     mu = musl*(Temperature/Tsl)^(3.0/2)*(Tsl+Sc)/(Temperature+Sc)
