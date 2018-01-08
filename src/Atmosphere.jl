@@ -73,13 +73,13 @@ Output: Temperature in Kelvin, Pressure in Pascals"
 function temp_presnasa(altitude::Float64)
     #Tempurature and Pressure Fits
     if altitude<= 11000
-        T = 15.04 - .00649*altitude+ 273.1 #units: K
+        T = 15.04 - .00649*altitude + 273.1 #units: K
         P = 1000*(101.29*(T/288.08)^5.256) #units: Pa
     elseif (altitude> 11000) && (altitude<= 25000)
         T = -56.46 + 273.1 #units: K
         P = 1000*(22.65*exp(1.73 - 0.000157*altitude)) #units: Pa
     else #altitude> 25000
-        T = -131.21 + 0.00299*altitude+ 273.1 #units: K
+        T = -131.21 + 0.00299*altitude + 273.1 #units: K
         P = 1000*(2.488/((T/216.6)^11.388)) #units: Pa
     end
 
