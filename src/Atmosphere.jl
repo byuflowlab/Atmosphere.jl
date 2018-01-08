@@ -1,12 +1,14 @@
-"Atmosphere: Calculate values for air density, dynamic viscosity, and speed of sound.
+"
+    Atmosphere
+Calculate values for air density, dynamic viscosity, and speed of sound.
 
-Constains the Functions:\\
--atmosphere (main)\\
--temp_presdrela (default fit)\\
--tem_presnasa\\
--density\\
--viscosity\\
--speedofsound"
+# Methods
+- atmospherefit
+- temp_presdrela
+- temp_presnasa
+- density
+- viscosity
+- speedofsound"
 module Atmosphere
 export atmosphere
 
@@ -21,9 +23,9 @@ const R_M = 287.0520809957016 #Molar Gas Constant/Mean Molar Mass of dry air 287
 """
     atmospherefit(altitude::Float64)
 
-Call Standard Atmosphere fit, density, viscosity, and speed of sound functions.
+Return density (kg/m^3), viscosity (Pa-s), and speed of sound (m/s) functions.
 
-Input altitude must be in meters.
+Employ fits to Standard Atmosphere model. Input altitude must be in meters.
 
 """
 function atmospherefit(altitude::Float64)
@@ -41,7 +43,7 @@ end #atmospherefit
 """
     temp_presdrela(altitude::Float64)
 
-Return Temperature and Pressure values based on fit to Standard Atmosphere Model.
+Return Temperature (K) and Pressure (Pa) values based on fit to Standard Atmosphere Model.
 
 The fit is a slightly modified version of that found in Flight Vehicle Aerodynamics by Mark Drela.
 
@@ -85,12 +87,12 @@ end #temp_presdrela()
 """
     density(Temperature::Float64, Pressure::Float64)
 
-Return air density from Ideal Gas Law.
+Return Air Density (kg/m^3) from Ideal Gas Law.
 
 """
 function density(Temperature::Float64, Pressure::Float64)
     #Ideal Gas Law
-    rho = Pressure/(R_M*Temperature) #units: kg/m^3
+    rho = Pressure/(R_M*Temperature)
     return rho
 end #density()
 
@@ -98,7 +100,7 @@ end #density()
 """
     speedofsound(Temperature::Float64)
 
-Return Speed of Sound from Ideal Gas Law.
+Return Speed of Sound (m/s) from Ideal Gas Law.
 
 """
 function speedofsound(Temperature::Float64)
@@ -111,11 +113,11 @@ end #speedofsound()
 """
     viscosity(Temperature::Float64)
 
-Return Dynamic Viscosity from Sutherlands Equation.
+Return Dynamic Viscosity (Pa-s) from Sutherlands Equation.
 
 """
 function viscosity(Temperature::Float64)
-    mu = musl*(Temperature/Tsl)^(3.0/2)*(Tsl+Sc)/(Temperature+Sc) #Pa-s
+    mu = musl*(Temperature/Tsl)^(3.0/2)*(Tsl+Sc)/(Temperature+Sc)
     return mu
 end #viscosity()
 
