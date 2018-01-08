@@ -10,6 +10,14 @@ Constains the Functions:\\
 module Atmosphere
 export atmosphere
 
+#Define Constants
+const Tsl = 288.15  #sea level temperature (K)
+const Psl = 101325 #sea level pressure (Pa)
+const musl = 0.0000181206  #sea level viscosity (N-s/m^2)
+const Sc = 110.4  #constant in Sutherlands formula
+const gamma = 1.4  #ratio of specific heats (air)
+const R_M = 287.0520809957016 #Molar Gas Constant/Mean Molar Mass of dry air 287.058
+
 "
 ```julia
 atmosphere(altitude::Float64 [,style::String])
@@ -50,9 +58,6 @@ Output: Temperature in Kelvin, Pressure in Pascals"
 function temp_presdrela(altitude::Float64)
     #Convert Altitude to km
     altkm = altitude/1000
-    #Define Constants
-    Tsl = 288.15  #sea level temperature (K)
-    Psl = 101325 #sea level pressure (Pa)
 
     #Temperature and Pressure Fits
     T = Tsl - 71.5 + 2*log(1+exp(35.75-3.25*(altkm))+exp(-3.0+0.0003*(altkm)^3))
@@ -102,7 +107,7 @@ Input: Temperature in Kelvin, Pressure in Pascals
 Output: Density in kilogram per meter cubed"
 function density(Temperature::Float64,Pressure::Float64)
     #Ideal Gas Law
-    rho = Pressure/(287.0520809957016*Temperature) #units: kg/m^3
+    rho = Pressure/(R_M*Temperature) #units: kg/m^3
     return rho
 end #density()
 
@@ -118,8 +123,6 @@ Input: Temperature in Kelvin
 
 Output: Speed of Sound in meters per second"
 function speedofsound(Temperature::Float64)
-    gamma = 1.4  #ratio of specific heats (air)
-    R_M = 287.0520809957016 #Molar Gas Constant/Mean Molar Mass of dry air 287.058
     #speed of sound (ideal gas law)
     a = sqrt(gamma*R_M*Temperature)
     return a
@@ -137,9 +140,6 @@ Input: Temperature in Kelvin
 
 Output: Dynamic Viscosity in Pascal seconds (Newton seconds per meter squared)"
 function viscosity(Temperature::Float64)
-    Tsl = 288.15  #sea level temperature (K)
-    musl = 0.0000181206  #sea level viscosity (N-s/m^2)
-    Sc = 110.4  #constant in Sutherlands formula
     mu = musl*(Temperature/Tsl)^(3.0/2)*(Tsl+Sc)/(Temperature+Sc) #Pa-s
     return mu
 end #viscosity()
