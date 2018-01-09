@@ -21,5 +21,6 @@ Calculate values for air density, dynamic viscosity, and speed of sound.
 module Atmosphere
 
 include("properties.jl")
+include("wind.jl")
 
 end #module Atmosphere
