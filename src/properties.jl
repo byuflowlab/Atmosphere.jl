@@ -8,11 +8,11 @@ const R_M = 287.0520809957016 #Molar Gas Constant: R (gas constant) = 8.31432e3 
 const earthradius = 6369.0e3 #radius of the earth (m)
 const gravity = 9.81
 """
-    atmospherefit(altitude::Float64)
+	atmospherefit(altitude::Float64)
 
 Return density (kg/m^3), viscosity (Pa-s), and speed of sound (m/s) functions.
 
-Employ fits to Standard Atmosphere model. Input altitude must be in meters.
+Input altitude must be in meters.
 """
 function atmospherefit(altitude::Float64)
 
@@ -21,7 +21,7 @@ function atmospherefit(altitude::Float64)
 	mu = viscosity(T)
 	a = speedofsound(T)
 
-    return rho, mu, a
+	return rho, mu, a
 
 end #atmospherefit
 
@@ -68,9 +68,9 @@ end #atmospherefit
 """
 	temp_prestable(altitude::Float64)
 
-Return Temperature (K) and Pressure (Pa) values based on fit to Standard Atmosphere Model.
+Calculate atmospheric temperature and pressure for input altitude (meters)
+from 1976 Standard Atmosphere Model.
 
-The fit is a slightly modified version of that found in Flight Vehicle Aerodynamics by Mark Drela. Input altitude must be in meters.
 """
 function temp_prestable(altitude::Float64)
 	#Convert Geometric Altitude to Geopotential Altitude
@@ -100,41 +100,41 @@ function temp_prestable(altitude::Float64)
 end
 
 """
-    density(Temperature::Float64, Pressure::Float64)
+	density(Temperature::Float64, Pressure::Float64)
 
 Return Air Density (kg/m^3) from Ideal Gas Law.
 
 Input Temperature must be in Kelvin, and Input Pressure must be in Pascals.
 """
 function density(Temperature::Float64, Pressure::Float64)
-    #Ideal Gas Law
-    rho = Pressure/(R_M*Temperature)
-    return rho
+	#Ideal Gas Law
+	rho = Pressure/(R_M*Temperature)
+	return rho
 end #density()
 
 
 """
-    speedofsound(Temperature::Float64)
+	speedofsound(Temperature::Float64)
 
 Return Speed of Sound (m/s) from Ideal Gas Law.
 
 Input Temperature must be in Kelvin.
 """
 function speedofsound(Temperature::Float64)
-    #speed of sound (ideal gas law)
-    a = sqrt(gamma*R_M*Temperature)
-    return a
+	#speed of sound (ideal gas law)
+	a = sqrt(gamma*R_M*Temperature)
+	return a
 end #speedofsound()
 
 
 """
-    viscosity(Temperature::Float64)
+	viscosity(Temperature::Float64)
 
 Return Dynamic Viscosity (Pa-s) from Sutherlands Equation.
 
 Input Temperature must be in Kelvin.
 """
 function viscosity(Temperature::Float64)
-    mu = musl*(Temperature/Tsl)^(3.0/2)*(Tsl+Sc)/(Temperature+Sc)
-    return mu
+	mu = musl*(Temperature/Tsl)^(3.0/2)*(Tsl+Sc)/(Temperature+Sc)
+	return mu
 end #viscosity()
