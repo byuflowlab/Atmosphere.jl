@@ -1,4 +1,4 @@
-@testset "Temperature and Pressure Fits: Drela" begin
+@testset "Temperature and Pressure Fit: Drela" begin
 
 	#---Parameters, Inputs, etc.
 	h = [0.0 18300.0]
@@ -7,7 +7,7 @@
 	T = zeros(length(h))
 	P = zeros(length(h))
 	for i=1:length(h)
-		T[i],P[i] = Atmosphere.temp_presdrela(h[i])
+		T[i],P[i] = Atmosphere.temp_presfit(h[i])
 	end #for length h
 
 	#---Check Outputs
@@ -19,7 +19,7 @@
 
 end #Temp and Pres: Drela
 
-@testset "Temperature and Pressure Fits: NASA" begin
+@testset "Temperature and Pressure Table: NASA" begin
 
 	#---Parameters, Inputs, etc.
 	h = [0.0 18300.0]
@@ -28,7 +28,7 @@ end #Temp and Pres: Drela
 	T = zeros(length(h))
 	P = zeros(length(h))
 	for i=1:length(h)
-		T[i],P[i] = Atmosphere.temp_presnasa(h[i])
+		T[i],P[i] = Atmosphere.temp_prestable(h[i])
 	end #for length h
 
 	#---Check Outputs
