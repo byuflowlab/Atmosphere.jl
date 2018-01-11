@@ -4,8 +4,9 @@ const Psl = 101325.0 #sea level pressure (Pa)
 const musl = 0.0000181206  #sea level viscosity (N-s/m^2)
 const Sc = 110.0  #constant in Sutherlands formula (K)
 const gamma = 1.4  #ratio of specific heats (air)
-const R_M = 287.0520809957016 #Molar Gas Constant/Mean Molar Mass of dry air
-
+const R_M = 287.0520809957016 #Molar Gas Constant: R (gas constant) = 8.31432e3 #N m kmol−1 K−1, M (mean molar mass) = 28.9645 #g/mol, R_M = R/M
+const earthradius = 6369.0e3 #radius of the earth (m)
+const gravity = 9.81
 """
     atmospherefit(altitude::Float64)
 
