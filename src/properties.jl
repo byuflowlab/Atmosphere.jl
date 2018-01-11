@@ -77,10 +77,10 @@ function temp_prestable(altitude::Float64)
 	altgeopot = altitude*earthradius/(altitude+earthradius)
 
 	#table values
-	altitudetable = [0.0, 11.0, 20.0, 32.0, 47.0, 51.0, 71.0, 84.852]*1e3
-	temperaturetable = [288.15, 216.65, 216.65, 228.65, 270.65, 270.65, 214.65, 186.946]
-	temperaturegradient = [-6.5, 0.0, 1.0, 2.8, 0.0, -2.8, -2.0, 0.0]*1e-3
-	pressuretable = [101325.0, 22620.36, 5469.378, 866.5941, 110.6457, 66.76995, 3.942586, 0.371775]
+	altitudetable = [0.0; 11.0; 20.0; 32.0; 47.0; 51.0; 71.0; 84.5]*1e3
+	temperaturetable = 288.150; 216.650; 216.650; 228.650; 270.650; 270.650; 214.650; 187.650]
+	temperaturegradient = [0.0; -0.0065; 0.0; 0.001; 0.0028; 0.0 -0.0028; -0.00195]
+	pressuretable = [101325.0; 22632.0; 5474.8; 868.01; 110.90; 66.938; 3.9564; .39814]
 
 	#find relavent index in tables
 	idx = find(altitudetable.<=altgeopot)[end]
