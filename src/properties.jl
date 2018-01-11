@@ -15,7 +15,9 @@ Return density (kg/m^3), viscosity (Pa-s), and speed of sound (m/s) functions.
 Input altitude must be in meters.
 """
 function atmospherefit(altitude::Float64)
-
+	if altitude > 47000.0
+		warn("air properties for altitudes above 47000 meters will be innacurate.")
+	end
 	T, P = temp_presfit(altitude)
 	rho = density(T, P)
 	mu = viscosity(T)
@@ -37,8 +39,8 @@ function temp_presfit(altitude::Float64)
 	#Convert Altitude to km
 	altkm = altitude/1000
 
-	T = Tsl - 71.5 + 2*log(1+exp(35.75-3.25*(altkm))+exp(-3.0+0.0003*(altkm)^3))
-	P = Psl*exp(-0.118*(altkm)-(0.0015*(altkm)^2)/(1-0.018*(altkm)+0.0011*(altkm)^2))
+	T = Tsl - 71.5 + 2*log(1+exp(35.75-3.25*altkm)+exp(-3.0+0.0003*altkm^3))
+	P = Psl*exp(-0.118*altkm-(0.0015*altkm^2)/(1-0.018*altkm+0.0011*altkm^2))
 
 	return T, P
 
@@ -52,7 +54,7 @@ Return density (kg/m^3), viscosity (Pa-s), and speed of sound (m/s) functions.
 Input altitude must be in meters.
 """
 function atmospheretable(altitude::Float64)
-	if altitude > 86000
+	if altitude > 86000.0
 		warn("air properties for altitudes above 86000 meters will be innacurate.")
 	end
 
@@ -79,7 +81,7 @@ function temp_prestable(altitude::Float64)
 	#table values
 	altitudetable = [0.0; 11.0; 20.0; 32.0; 47.0; 51.0; 71.0; 84.5]*1e3
 	temperaturetable = [288.150; 216.650; 216.650; 228.650; 270.650; 270.650; 214.650; 187.650]
-	temperaturegradient = [-0.0065; 0.0; 0.001; 0.0028; 0.0; -0.0028; -0.00195; 0.0]
+	temperaturegradient = [-0.0065; 0.0; 0.001; 0.0028; 0.0; -0.0028; -0.002; 0.0]
 	pressuretable = [101325.0; 22632.0; 5474.8; 868.01; 110.90; 66.938; 3.9564; .39814]
 
 	#find relavent index in tables
