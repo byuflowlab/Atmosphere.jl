@@ -79,7 +79,7 @@ function temp_prestable(altitude::Float64)
 	#table values
 	altitudetable = [0.0; 11.0; 20.0; 32.0; 47.0; 51.0; 71.0; 84.5]*1e3
 	temperaturetable = [288.150; 216.650; 216.650; 228.650; 270.650; 270.650; 214.650; 187.650]
-	temperaturegradient = [0.0; -0.0065; 0.0; 0.001; 0.0028; 0.0; -0.0028; -0.00195]
+	temperaturegradient = [-0.0065; 0.0; 0.001; 0.0028; 0.0; -0.0028; -0.00195; 0.0]
 	pressuretable = [101325.0; 22632.0; 5474.8; 868.01; 110.90; 66.938; 3.9564; .39814]
 
 	#find relavent index in tables
