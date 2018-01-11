@@ -1,7 +1,7 @@
 @testset "Temperature and Pressure Fit: Drela" begin
 
 	#---Parameters, Inputs, etc.
-	h = [0.0; 11.0; 20.0; 32.0; 47.0; 51.0; 71.0; 84.5]*1e3
+	h = [0.0; 5.0; 11.0; 15.0; 20.0; 26.0; 32.0; 39.0; 47.0; 49.0; 51.0; 61.0; 71.0; 78.0; 84.5]*1e3
 
 	#---Initialize and Run Function
 	T = zeros(length(h))
@@ -12,8 +12,8 @@
 
 	#---Check Outputs
 	#compared to values from the 1976 US Standard Atmosphere Data https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/19770009539.pdf, Table 1: Geopotential Altitdue, H
-	Tcheck = [288.150; 216.650; 216.650; 228.650; 270.650; 270.650; 214.650; 187.650] #K
-	Pcheck = [101325.0; 22632.0; 5474.8; 868.01; 110.90; 66.938; 3.9564; .39814] #Pa
+	Tcheck = [288.150; 255.650; 216.650; 216.650; 216.650; 222.650; 228.650; 248.250; 270.650; 270.650; 270.650; 242.650; 214.650; 200.650; 187.650] #K
+	Pcheck = [101325.0; 54019.0; 22632.0; 12044.0; 5474.8; 2153.0; 868.01; 318.22; 110.90; 86.162; 66.938; 17.660; 3.9564; 1.2501; 0.39814] #Pa
 	@test isapprox(T, Tcheck, atol=1e0)
 	@test isapprox(P, Pcheck, atol=1e2)
 
@@ -22,7 +22,7 @@ end #Temp and Pres: Drela
 @testset "Temperature and Pressure Table: NASA" begin
 
 	#---Parameters, Inputs, etc.
-	h = [0.0; 11.0; 20.0; 32.0; 47.0; 51.0; 71.0; 84.5]*1e3
+	h = [0.0; 5.0; 11.0; 15.0; 20.0; 26.0; 32.0; 39.0; 47.0; 49.0; 51.0; 61.0; 71.0; 78.0; 84.5]*1e3
 
 	#---Initialize and Run Function
 	T = zeros(length(h))
