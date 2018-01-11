@@ -16,62 +16,88 @@ Employ fits to Standard Atmosphere model. Input altitude must be in meters.
 """
 function atmospherefit(altitude::Float64)
 
-    T, P = temp_presdrela(altitude)
-    rho = density(T, P)
-    mu = viscosity(T)
-    a = speedofsound(T)
+	T, P = temp_presfit(altitude)
+	rho = density(T, P)
+	mu = viscosity(T)
+	a = speedofsound(T)
 
     return rho, mu, a
 
 end #atmospherefit
 
+"""
+	temp_presfit(altitude::Float64)
+
+Calculate atmospheric temperature and pressure for input altitude (meters) using fits of the standard atmosphere model,
+slightly modified from those found in Flight Vehicle Aerodynamics by Mark Drela.
 
 """
-    temp_presdrela(altitude::Float64)
+function temp_presfit(altitude::Float64)
+
+	#Convert Altitude to km
+	altkm = altitude/1000
+
+	T = Tsl - 71.5 + 2*log(1+exp(35.75-3.25*(altkm))+exp(-3.0+0.0003*(altkm)^3))
+	P = Psl*exp(-0.118*(altkm)-(0.0015*(altkm)^2)/(1-0.018*(altkm)+0.0011*(altkm)^2))
+
+	return T, P
+
+end #temp_presfit
+
+"""
+	atmospheretable(altitude::Float64)
+
+Return density (kg/m^3), viscosity (Pa-s), and speed of sound (m/s) functions.
+
+Input altitude must be in meters.
+"""
+function atmospheretable(altitude::Float64)
+	if altitude > 86000
+		warn("air properties for altitudes above 86000 meters will be innacurate.")
+	end
+
+	T, P = temp_prestable(altitude)
+	rho = density(T, P)
+	mu = viscosity(T)
+	a = speedofsound(T)
+
+	return rho, mu, a
+
+end #atmospherefit
+
+"""
+	temp_prestable(altitude::Float64)
 
 Return Temperature (K) and Pressure (Pa) values based on fit to Standard Atmosphere Model.
 
 The fit is a slightly modified version of that found in Flight Vehicle Aerodynamics by Mark Drela. Input altitude must be in meters.
 """
-function temp_presdrela(altitude::Float64)
-    #Convert Altitude to km
-    altkm = altitude/1000
+function temp_prestable(altitude::Float64)
+	#Convert Geometric Altitude to Geopotential Altitude
+	altgeopot = altitude*earthradius/(altitude+earthradius)
 
-    #Temperature and Pressure Fits
-    T = Tsl - 71.5 + 2*log(1+exp(35.75-3.25*(altkm))+exp(-3.0+0.0003*(altkm)^3))
-    P = Psl*exp(-0.118*(altkm)-(0.0015*(altkm)^2)/(1-0.018*(altkm)+0.0011*(altkm)^2))
+	#table values
+	altitudetable = [0.0, 11.0, 20.0, 32.0, 47.0, 51.0, 71.0, 84.852]*1e3
+	temperaturetable = [288.15, 216.65, 216.65, 228.65, 270.65, 270.65, 214.65, 186.946]
+	temperaturegradient = [-6.5, 0.0, 1.0, 2.8, 0.0, -2.8, -2.0, 0.0]*1e-3
+	pressuretable = [101325.0, 22620.36, 5469.378, 866.5941, 110.6457, 66.76995, 3.942586, 0.371775]
 
-    return T, P
-end #temp_presdrela()
+	#find relavent index in tables
+	idx = find(altitudetable.<=altgeopot)[end]
 
-#TODO check actual std atm source and update this function accordingly, also create an atmospherestd() function analogous to atmospherefit() above
-# """
-#      temp_presnasa(altitude::Float64)
-#
-# Standard Atmosphere model fits for Temperature and Pressure, obtained from the NASA website.
-#
-# """
-# function temp_presnasa(altitude::Float64)
-#     #Tempurature and Pressure Fits
-#     if altitude < -1000.0
-#         warn("Atmosphere model invalid for altitudes below -1,000 meters.")
-#     elseif (altitude >= -1000.0) && (altitude <= 11000.0)
-#         T = 15.04 - .00649*altitude + 273.1 #units: K
-#         P = 1000*(101.29*(T/288.08)^5.256) #units: Pa
-#     elseif (altitude > 11000) && (altitude <= 25000)
-#         T = -56.46 + 273.1 #units: K
-#         P = 1000*(22.65*exp(1.73 - 0.000157*altitude)) #units: Pa
-#     elseif (altitude > 25000) && (altitude <= 85000)
-#         T = -131.21 + 0.00299*altitude + 273.1 #units: K
-#         P = 1000*(2.488/((T/216.6)^11.388)) #units: Pa
-#     else
-#         warn("Atmosphere model invalid for altitudes above 85,000 meters.")
-#     end
-#
-#     return T, P
-#
-# end #temp_presnasa()
+	#find temperature
+	T = temperaturetable[idx] + (altgeopot-altitudetable[idx])*temperaturegradient[idx]
 
+	#find pressure
+	if temperaturegradient[idx] == 0.0
+		P = pressuretable[idx]*exp(-gravity*(altgeopot-altitudetable[idx])/R_M/temperaturetable[idx])
+	else
+		P = pressuretable[idx]*(temperaturetable[idx]/T)^(gravity/R_M/temperaturegradient[idx])
+	end
+
+	return T, P
+
+end
 
 """
     density(Temperature::Float64, Pressure::Float64)
