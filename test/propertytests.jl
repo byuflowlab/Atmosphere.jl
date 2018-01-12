@@ -3,19 +3,16 @@
 	#---Parameters, Inputs, etc.
 	h = [0.0; 5004.0; 11019.0; 15035.0; 20063.0; 26107.0; 32162.0; 39241.0; 47350.0]#[0.0; 5.0; 11.0; 15.0; 20.0; 26.0; 32.0; 39.0; 47.0]*1e3
 
-	#---Initialize and Run Function
-	T = zeros(length(h))
-	P = zeros(length(h))
-	for i=1:length(h)
-		T[i],P[i] = Atmosphere.temp_presfit(h[i])
-	end #for length h
-
-	#---Check Outputs
-	#compared to values from the 1976 US Standard Atmosphere Data https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/19770009539.pdf, Table 1: Geopotential Altitdue, H
+	#values from the 1976 US Standard Atmosphere Data https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/19770009539.pdf, Table 1: Geopotential Altitdue, H
 	Tcheck = [288.150; 255.650; 216.650; 216.650; 216.650; 222.650; 228.650; 248.250; 270.650] #K
 	Pcheck = [101325.0; 54019.0; 22632.0; 12044.0; 5474.8; 2153.0; 868.01; 318.22; 110.90] #Pa
-	@test isapprox(T, Tcheck, atol=5.0)
-	@test isapprox(P, Pcheck, atol=250.0)
+
+	#---Run Function/Tests
+	for i=1:length(h)
+		T,P = Atmosphere.temp_presfit(h[i])
+		@test isapprox(T, Tcheck[i], atol=3.75)
+		@test isapprox(P, Pcheck[i], atol=1.0825e2)
+	end #for length h
 
 end #Temp and Pres: Fit
 
@@ -23,20 +20,18 @@ end #Temp and Pres: Fit
 
 	#---Parameters, Inputs, etc.
 	h = [0.0; 5004.0; 11019.0; 15035.0; 20063.0; 26107.0; 32162.0; 39241.0; 47350.0; 49381.0; 51413.0; 61591.0; 71802.0; 78969.0; 85638.0]
+	#values from the 1976 US Standard Atmosphere Data https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/19770009539.pdf, Table 1: Geopotential Altitdue
+	Tcheck = [288.150; 255.650; 216.650; 216.650; 216.650; 222.650; 228.650; 248.250; 270.650; 270.650; 270.650; 242.650; 214.650; 200.650; 187.650] #K
+	Pcheck = [101325.0; 54019.0; 22632.0; 12044.0; 5474.8; 2153.0; 868.01; 318.22; 110.90; 86.162; 66.938; 17.660; 3.9564; 1.2501; 0.39814] #Pa
 
-	#---Initialize and Run Function
+	#---Run Function/Tests
 	T = zeros(length(h))
 	P = zeros(length(h))
 	for i=1:length(h)
-		T[i],P[i] = Atmosphere.temp_prestable(h[i])
+		T, P = Atmosphere.temp_prestable(h[i])
+		@test isapprox(T, Tcheck[i], atol=3.75e-3)
+		@test isapprox(P, Pcheck[i], atol=1.155e1)
 	end #for length h
-
-	#---Check Outputs
-	#compared to values from the 1976 US Standard Atmosphere Data https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/19770009539.pdf, Table 1: Geopotential Altitdue
-	Tcheck = [288.150; 255.650; 216.650; 216.650; 216.650; 222.650; 228.650; 248.250; 270.650; 270.650; 270.650; 242.650; 214.650; 200.650; 187.650] #K
-	Pcheck = [101325.0; 54019.0; 22632.0; 12044.0; 5474.8; 2153.0; 868.01; 318.22; 110.90; 86.162; 66.938; 17.660; 3.9564; 1.2501; 0.39814] #Pa
-	@test isapprox(T, Tcheck, atol=7.2e-3)
-	@test isapprox(P, Pcheck, atol=16.5)
 
 end #Temp and Pres: Table
 
@@ -49,14 +44,12 @@ end #Temp and Pres: Table
 	T = [288.150; 216.650; 216.650; 228.650; 270.650; 270.650; 214.650; 187.650] #K
 	P = [101325.0; 22632.0; 5474.8; 868.01; 110.90; 66.938; 3.9564; .39814] #Pa
 
-	#---Initialize and Run Function
+	#---Run Function/Tests
 	rho = zeros(length(P))
 	for i=1:length(P)
-		rho[i] = Atmosphere.density(T[i],P[i])
+		rho = Atmosphere.density(T[i],P[i])
+		@test isapprox(rho, P[i]/(Rs*T[i]), atol=1e-10)
 	end #for length P
-
-	#---Check Outputs
-	@test isapprox(rho, P./(Rs.*T), atol=1e-4)
 
 end #Ideal Gas Density
 
@@ -72,29 +65,24 @@ end #Ideal Gas Density
 	#---Initialize and Run Function
 	sos = zeros(length(T))
 	for i=1:length(T)
-		sos[i] = Atmosphere.speedofsound(T[i])
+		sos = Atmosphere.speedofsound(T[i])
+		@test isapprox(sos, sqrt(gamma*Rs*T[i]), atol=1e-10)
 	end #for length T
-
-	#---Check Outputs
-	@test isapprox(sos, sqrt.(gamma.*Rs.*T), atol=1e0)
 
 end #Ideal Gas: SoS
 
 @testset "Sutherland's Equation: Dynamic Viscosity" begin
 
 	#---Parameters, Inputs, etc.
-	Tref = 288.15 #sea level temperature (K)
+	Tsl = 288.15 #sea level temperature (K)
 	musl = 0.0000181206 #sea level viscosity (N-s/m^2)
 	Sc = 113.0 #constant in Sutherlands formula for air from Sutherland, W. (1893), "The viscosity of gases and molecular force"
 	T = [288.150; 216.650; 216.650; 228.650; 270.650; 270.650; 214.650; 187.650] #K
 
 	#---Initialize and Run Function
-	mu = zeros(length(T))
 	for i=1:length(T)
-		mu[i] = Atmosphere.viscosity(T[i])
+		mu = Atmosphere.viscosity(T[i])
+		@test isapprox(mu, musl*(T[i]/Tsl)^(3.0/2.0)*(Tsl+Sc)/(T[i]+Sc), atol=3.25e-8)
 	end
-
-	#---Check Outputs
-	@test isapprox(mu, musl.*(T./Tref).^(3.0./2.0).*(Tref+Sc)./(T+Sc), atol=1e-7)
 
 end #Southerland's Eqn.: Viscosity
