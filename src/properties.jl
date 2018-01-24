@@ -158,7 +158,7 @@ Calculate adjusted gravitational acceleration at altitude (meters) and latitude 
 1984 Ellipsoidal Gravity Formula.
 
 """
-function gravity(altitude::Float64; latitude::Float64=0.7853981633974483)
+function gravity(altitude::Float64, latitude::Float64=0.7853981633974483)
 
 	#latitude adjustment of mean sea level gravitational acceleration.
 	adjlat = 9.7803253359*(1 + 0.00193185265241*sin(latitude)^2)/sqrt(1 - 0.00669437999013*sin(latitude)^2)
