@@ -1,3 +1,5 @@
+export atmospherefit, atmospheretable
+
 #Define Properties Constants
 const Tsl = 288.15  #sea level temperature (K)
 const Psl = 101325.0 #sea level pressure (Pa)
