@@ -86,3 +86,10 @@ end #Ideal Gas: SoS
 	end
 
 end #Southerland's Eqn.: Viscosity
+
+@testset "Derivatives" begin
+	Atmosphere.atmospherefitderiv(1000.0)
+	Atmosphere.atmospheretablederiv(1000.0)
+	Atmosphere.gravityderiv(1000.0)
+	@test true
+end

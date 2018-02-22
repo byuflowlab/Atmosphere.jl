@@ -12,13 +12,13 @@ const g = 9.80665 #gravitational constant at mean sea level
 
 
 """
-atmospherefit(altitude::Float64)
+atmospherefit(altitude::Real)
 
 Return density (kg/m^3), viscosity (Pa-s), and speed of sound (m/s) functions.
 
 Input altitude must be in meters.
 """
-function atmospherefit(altitude::Float64)
+function atmospherefit(altitude::Real)
     if altitude > 47000.0
         warn("air properties for altitudes above 47000 meters will be innacurate.")
     end
@@ -33,13 +33,13 @@ end #atmospherefit
 
 
 """
-temp_presfit(altitude::Float64)
+temp_presfit(altitude::Real)
 
 Calculate atmospheric temperature and pressure for input altitude (meters) using fits of the standard atmosphere model,
 slightly modified from those found in Flight Vehicle Aerodynamics by Mark Drela.
 
 """
-function temp_presfit(altitude::Float64)
+function temp_presfit(altitude::Real)
 
     #Convert Altitude to km
     altkm = altitude/1000
@@ -53,13 +53,13 @@ end #temp_presfit
 
 
 """
-atmospheretable(altitude::Float64)
+atmospheretable(altitude::Real)
 
 Return density (kg/m^3), viscosity (Pa-s), and speed of sound (m/s) functions.
 
 Input altitude must be in meters.
 """
-function atmospheretable(altitude::Float64)
+function atmospheretable(altitude::Real)
     if altitude > 86000.0
         warn("air properties for altitudes above 86000 meters will be innacurate.")
     end
@@ -75,13 +75,13 @@ end #atmospherefit
 
 
 """
-temp_prestable(altitude::Float64)
+temp_prestable(altitude::Real)
 
 Calculate atmospheric temperature and pressure for input altitude (meters)
 from 1976 Standard Atmosphere Model.
 
 """
-function temp_prestable(altitude::Float64)
+function temp_prestable(altitude::Real)
     #Convert Geometric Altitude to Geopotential Altitude
     altgeopot = altitude*earthradius/(altitude+earthradius)
 
@@ -110,13 +110,13 @@ end
 
 
 """
-density(Temperature::Float64, Pressure::Float64)
+density(Temperature::Real, Pressure::Real)
 
 Return Air Density (kg/m^3) from Ideal Gas Law.
 
 Input Temperature must be in Kelvin, and Input Pressure must be in Pascals.
 """
-function density(Temperature::Float64, Pressure::Float64)
+function density(Temperature::Real, Pressure::Real)
     #Ideal Gas Law
     rho = Pressure/(R_M*Temperature)
     return rho
@@ -124,13 +124,13 @@ end #density()
 
 
 """
-speedofsound(Temperature::Float64)
+speedofsound(Temperature::Real)
 
 Return Speed of Sound (m/s) from Ideal Gas Law.
 
 Input Temperature must be in Kelvin.
 """
-function speedofsound(Temperature::Float64)
+function speedofsound(Temperature::Real)
     #speed of sound (ideal gas law)
     a = sqrt(gamma*R_M*Temperature)
     return a
@@ -138,30 +138,30 @@ end #speedofsound()
 
 
 """
-viscosity(Temperature::Float64)
+viscosity(Temperature::Real)
 
 Return Dynamic Viscosity (Pa-s) from Sutherlands Equation.
 
 Input Temperature must be in Kelvin.
 """
-function viscosity(Temperature::Float64)
+function viscosity(Temperature::Real)
     mu = musl*(Temperature/Tsl)^(3.0/2)*(Tsl+Sc)/(Temperature+Sc)
     return mu
 end #viscosity()
 
 
 """
-gravity(altitude::Float64)
+gravity(altitude::Real)
 
-Calculate adjusted gravitational acceleration at altitude (meters) and latitude (radians).
+Calculate adjusted gravitational acceleration at altitude (meters) and latitude (degrees).
 
 1984 Ellipsoidal Gravity Formula.
 
 """
-function gravity(altitude::Float64, latitude::Float64=0.7853981633974483)
+function gravity(altitude::Real, latitude::Real=45.0)
 
     #latitude adjustment of mean sea level gravitational acceleration.
-    adjlat = 9.7803253359*(1 + 0.00193185265241*sin(latitude)^2)/sqrt(1 - 0.00669437999013*sin(latitude)^2)
+    adjlat = 9.7803253359*(1 + 0.00193185265241*sind(latitude)^2)/sqrt(1 - 0.00669437999013*sind(latitude)^2)
     #altitude adjustment of gravitational constant.
     adjalt = adjlat*(earthradius/(altitude+earthradius))^2
 
