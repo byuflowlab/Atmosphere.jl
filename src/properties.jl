@@ -92,7 +92,7 @@ function temp_prestable(altitude::Real)
     pressuretable = [101325.0; 22632.0; 5474.8; 868.01; 110.90; 66.938; 3.9564; 0.39814]
 
     #find relavent index in tables
-    idx = find(altitudetable.<=altgeopot)[end]
+    idx = findall(altitudetable.<=altgeopot)[end]
 
     #find temperature
     T = temperaturetable[idx] + (altgeopot-altitudetable[idx])*temperaturegradient[idx]
@@ -120,7 +120,7 @@ function density(Temperature::Real, Pressure::Real)
     #Ideal Gas Law
     rho = Pressure/(R_M*Temperature)
     return rho
-end #density()
+end #density
 
 
 """
@@ -134,7 +134,7 @@ function speedofsound(Temperature::Real)
     #speed of sound (ideal gas law)
     a = sqrt(gamma*R_M*Temperature)
     return a
-end #speedofsound()
+end #speedofsound
 
 
 """
@@ -147,7 +147,7 @@ Input Temperature must be in Kelvin.
 function viscosity(Temperature::Real)
     mu = musl*(Temperature/Tsl)^(3.0/2)*(Tsl+Sc)/(Temperature+Sc)
     return mu
-end #viscosity()
+end #viscosity
 
 
 """
@@ -161,9 +161,9 @@ Calculate adjusted gravitational acceleration at altitude (meters) and latitude 
 function gravity(altitude::Real, latitude::Real=45.0)
 
     #latitude adjustment of mean sea level gravitational acceleration.
-    adjlat = 9.7803253359*(1 + 0.00193185265241*sind(latitude)^2)/sqrt(1 - 0.00669437999013*sind(latitude)^2)
+    gravadjlat = 9.7803253359*(1 + 0.00193185265241*sind(latitude)^2)/sqrt(1 - 0.00669437999013*sind(latitude)^2)
     #altitude adjustment of gravitational constant.
-    adjalt = adjlat*(earthradius/(altitude+earthradius))^2
+    gravadjalt = gravadjlat*(earthradius/(altitude+earthradius))^2
 
-    return adjalt
-end
+    return gravadjalt
+end #gravity

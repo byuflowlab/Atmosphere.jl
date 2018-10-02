@@ -19,11 +19,7 @@ Calculate values for air density, dynamic viscosity, and speed of sound.
 
 "
 module Atmosphere
-import ForwardDiff
-import DiffResults
 
 include("properties.jl")
-include("propertiesderiv.jl")
-include("wind.jl")
 
 end #module Atmosphere

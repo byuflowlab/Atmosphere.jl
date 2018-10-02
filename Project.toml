@@ -1,0 +1,10 @@
+name = "Atmosphere"
+uuid = "5a8d008c-c676-11e8-3e1a-9ff5e58349a0"
+authors = ["Taylor McDonnell <taylor.golden.mcdonnell@gmail.com>"]
+version = "0.1.0"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
