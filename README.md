@@ -30,5 +30,3 @@ and are found in the temp_presfit() function.
 The atmospheretable, and temp_prestable() operate similarly, but use the actual, linearized, 1976 standard atmosphere tables (see NASA archive: https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/19770009539.pdf) rather than a single equation fit. 
 
 The density(), viscosity(), and speedofsound() functions calculate their namesakes.
-
-## Wind
