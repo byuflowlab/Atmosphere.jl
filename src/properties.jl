@@ -20,7 +20,7 @@ Input altitude must be in meters.
 """
 function atmospherefit(altitude::Real)
     if altitude > 47000.0
-        warn("air properties for altitudes above 47000 meters will be innacurate.")
+        @warn("air properties for altitudes above 47000 meters will be innacurate.")
     end
     T, P = temp_presfit(altitude)
     rho = density(T, P)
@@ -61,7 +61,7 @@ Input altitude must be in meters.
 """
 function atmospheretable(altitude::Real)
     if altitude > 86000.0
-        warn("air properties for altitudes above 86000 meters will be innacurate.")
+        @warn("air properties for altitudes above 86000 meters will be innacurate.")
     end
 
     T, P = temp_prestable(altitude)
