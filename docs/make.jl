@@ -8,3 +8,7 @@ makedocs(
         "Example Usage" => "example.md",
         "Library" => "library.md"]
 )
+
+deploydocs(
+    repo = "github.com/byuflowlab/Atmosphere.jl.git"
+)
