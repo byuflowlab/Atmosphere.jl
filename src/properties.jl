@@ -1,4 +1,4 @@
-export atmospherefit, atmospheretable
+export atmospherefit, atmospheretable, gravity
 
 #Define Properties Constants
 const Tsl = 288.15  #sea level temperature (K)

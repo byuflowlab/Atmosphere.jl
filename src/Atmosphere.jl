@@ -1,4 +1,4 @@
-"
+"""
     Atmosphere
 
 Functions concerning atmospheric conditions: air properites, velocities, etc.
@@ -17,7 +17,7 @@ Calculate values for air density, dynamic viscosity, and speed of sound.
 
 # wind models
 
-"
+"""
 module Atmosphere
 
 include("properties.jl")
