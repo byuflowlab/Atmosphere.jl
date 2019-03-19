@@ -10,5 +10,9 @@ makedocs(
 )
 
 deploydocs(
-    repo = "github.com/byuflowlab/Atmosphere.jl.git"
+    root = ".",
+    target = "./build",
+    repo   = "github.com/byuflowlab/Atmosphere.jl",
+    branch = "gh-pages",
+    devbranch = "master"
 )
