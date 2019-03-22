@@ -25,14 +25,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "example/#",
-    "page": "Example Usage",
-    "title": "Example Usage",
-    "category": "page",
-    "text": "Coming soon... maybe."
-},
-
-{
     "location": "library/#",
     "page": "Library",
     "title": "Library",
