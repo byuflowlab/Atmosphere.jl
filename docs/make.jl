@@ -4,7 +4,6 @@ makedocs(
     sitename = "Atmosphere",
     modules = [Atmosphere],
     pages   = ["Home" => "index.md",
-        "Example Usage" => "example.md",
         "Library" => "library.md"]
 )
 
