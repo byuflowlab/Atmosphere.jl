@@ -89,3 +89,25 @@ end #Ideal Gas: SoS
 	end
 
 end #Southerland's Eqn.: Viscosity
+
+
+@testset "Vector compatibility" begin
+
+	#---Parameters, Inputs, etc.
+	h = [0.0; 5004.0; 11019.0; 15035.0; 20063.0; 26107.0; 32162.0; 39241.0; 47350.0; 49381.0; 51413.0; 61591.0; 71802.0; 78969.0; 85638.0]
+	
+	#---Run Function/Tests
+	Tv, Pv = Atmosphere.temp_prestable(h)
+	Tvf, Pvf = Atmosphere.temp_presfit(h)
+
+	for i=1:length(h)
+		T, P = Atmosphere.temp_prestable(h[i])
+		@test isapprox(T, Tv[i], atol=1.e-8)
+		@test isapprox(P, Pv[i], atol=1.e-8)
+
+		T, P = Atmosphere.temp_presfit(h[i])
+		@test isapprox(T, Tvf[i], atol=1.e-8)
+		@test isapprox(P, Pvf[i], atol=1.e-8)
+	end #for length h
+
+end #Temp and Pres: Table

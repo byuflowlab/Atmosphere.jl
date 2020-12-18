@@ -12,20 +12,20 @@ const g = 9.80665 #gravitational constant at mean sea level
 
 
 """
-atmospherefit(altitude::Real)
+atmospherefit(altitude::Union{Real,Vector{<:Real}})
 
 Return density (kg/m^3), viscosity (Pa-s), and speed of sound (m/s) functions.
 
-Input altitude must be in meters.
+Input altitude must be in meters, can be scalar or vector.
 """
-function atmospherefit(altitude::Real)
-    if altitude > 47000.0
+function atmospherefit(altitude::Union{Real,Vector{<:Real}})
+    if  maximum(altitude) > 47000.0
         @warn("air properties for altitudes above 47000 meters will be innacurate.")
     end
     T, P = temp_presfit(altitude)
-    rho = density(T, P)
-    mu = viscosity(T)
-    a = speedofsound(T)
+    rho = density.(T, P)
+    mu = viscosity.(T)
+    a = speedofsound.(T)
 
     return rho, mu, a
 
@@ -33,19 +33,19 @@ end #atmospherefit
 
 
 """
-temp_presfit(altitude::Real)
+temp_presfit(altitude::Union{Real,Vector{<:Real}})
 
 Calculate atmospheric temperature and pressure for input altitude (meters) using fits of the standard atmosphere model,
 slightly modified from those found in Flight Vehicle Aerodynamics by Mark Drela.
 
 """
-function temp_presfit(altitude::Real)
+function temp_presfit(altitude::Union{Real,Vector{<:Real}})
 
     #Convert Altitude to km
-    altkm = altitude/1000
+    altkm = altitude ./ 1000.
 
-    T = Tsl - 71.5 + 2*log(1+exp(35.75-3.25*altkm)+exp(-3.0+0.0003*altkm^3))
-    P = Psl*exp(-0.118*altkm-(0.0015*altkm^2)/(1-0.018*altkm+0.0011*altkm^2))
+    T = Tsl .- 71.5 .+ 2. * log.(1 .+ exp.(35.75 .- 3.25 * altkm) .+ exp.(-3.0 .+ 0.0003 * altkm.^3))
+    P = Psl * exp.(-0.118 * altkm .- (0.0015 * altkm.^2) ./ (1 .- 0.018 * altkm .+ 0.0011 * altkm.^2))
 
     return T, P
 
@@ -53,21 +53,21 @@ end #temp_presfit
 
 
 """
-atmospheretable(altitude::Real)
+atmospheretable(altitude::Union{Real,Vector{<:Real}})
 
 Return density (kg/m^3), viscosity (Pa-s), and speed of sound (m/s) functions.
 
 Input altitude must be in meters.
 """
-function atmospheretable(altitude::Real)
-    if altitude > 86000.0
+function atmospheretable(altitude::Union{Real,Vector{<:Real}})
+    if maximum(altitude) > 86000.0
         @warn("air properties for altitudes above 86000 meters will be innacurate.")
     end
 
     T, P = temp_prestable(altitude)
-    rho = density(T, P)
-    mu = viscosity(T)
-    a = speedofsound(T)
+    rho = density.(T, P)
+    mu = viscosity.(T)
+    a = speedofsound.(T)
 
     return rho, mu, a
 
@@ -75,15 +75,15 @@ end #atmospherefit
 
 
 """
-temp_prestable(altitude::Real)
+temp_prestable(altitude::Union{Real,Vector{<:Real}})
 
 Calculate atmospheric temperature and pressure for input altitude (meters)
 from 1976 Standard Atmosphere Model.
 
 """
-function temp_prestable(altitude::Real)
+function temp_prestable(altitude::Union{Real,Vector{<:Real}})
     #Convert Geometric Altitude to Geopotential Altitude
-    altgeopot = altitude*earthradius/(altitude+earthradius)
+    altgeopot = altitude .* earthradius ./ (altitude .+ earthradius)
 
     #table values
     altitudetable = [0.0; 11.0; 20.0; 32.0; 47.0; 51.0; 71.0; 84.5]*1e3
@@ -92,16 +92,27 @@ function temp_prestable(altitude::Real)
     pressuretable = [101325.0; 22632.0; 5474.8; 868.01; 110.90; 66.938; 3.9564; 0.39814]
 
     #find relavent index in tables
-    idx = findall(altitudetable.<=altgeopot)[end]
-
+    idx = zeros(Int64,length(altgeopot))
+    for i = 1:length(idx)
+        idx[i] = findall(altitudetable.<=altgeopot[i])[end]
+    end
+    
     #find temperature
-    T = temperaturetable[idx] + (altgeopot-altitudetable[idx])*temperaturegradient[idx]
+    T = temperaturetable[idx] .+ (altgeopot .- altitudetable[idx]) .* temperaturegradient[idx]
 
     #find pressure
-    if temperaturegradient[idx] == 0.0
-        P = pressuretable[idx]*exp(-g*(altgeopot-altitudetable[idx])/R_M/temperaturetable[idx])
-    else
-        P = pressuretable[idx]*(temperaturetable[idx]/T)^(g/R_M/temperaturegradient[idx])
+    P = pressuretable[idx].*(temperaturetable[idx]./T) .^ (g ./ R_M ./temperaturegradient[idx])
+    #pressure law when there is no temperature gradient:
+    # idg = (temperaturegradient[idx] .== 0.0)
+    # P[idg] .= pressuretable[idx][idg].*exp.(-g.*(altgeopot[idg].-altitudetable[idx][idg])./R_M./temperaturetable[idx][idg])
+    idg = findall(temperaturegradient[idx] .== 0.0) #forced to do this because Julia won't accept  P[[false]] if P is a Float
+    for i = idg
+        P[i] = pressuretable[idx][i].*exp.(-g.*(altgeopot[i].-altitudetable[idx][i])./R_M./temperaturetable[idx][i])
+    end
+
+    if isa(altitude,Real) 
+        P = P[1];
+        T = T[1];
     end
 
     return T, P
